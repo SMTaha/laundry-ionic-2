@@ -21,6 +21,8 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { AndroidPermissions } from '@ionic-native/android-permissions';
 
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/debounceTime';
+
 
 import { AuthService } from "../../auth/auth.service";
 import { MapService } from "../map/map.service";
@@ -131,6 +133,7 @@ export class IonicNativeMapPage {
     let location: string;
     console.log('location1:', location)
     let searchInput$ = Observable.fromEvent(this.button.nativeElement, 'keyup')
+      .debounceTime(500)
       .map(e => location = e['srcElement'].value.trim())
       .distinctUntilChanged()
       .switchMap(() => this.mapService.getJSON(location, this.latLng)) 
@@ -304,6 +307,7 @@ export class IonicNativeMapPage {
   }
   locationClickedBool;
   locationClicked(location) {
+    this.map.setClickable(false);
     console.log("You have clicked on: ", location);
     this.locationClickedBool = false;
     this.hide = true; 
@@ -329,7 +333,7 @@ export class IonicNativeMapPage {
         this.address = location.address;
         this.locationAlias = location.alias;
       };    
-      setTimeout(() => { this.available_locations = []}, 200);
+      setTimeout(() => { this.available_locations = [];this.map.setClickable(true);}, 200);
     }else{ 
       console.log('Here'); 
       this.locationClickedBool = true;
@@ -349,6 +353,7 @@ export class IonicNativeMapPage {
 
     this.addMarker(this.map, new LatLng(this.lat, this.lng));
     this.moveCamera(this.map, new LatLng(this.lat, this.lng));
+    
   }
 
 

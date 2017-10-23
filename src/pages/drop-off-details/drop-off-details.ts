@@ -70,7 +70,7 @@ export class DropOffDetails{
         this.maxDate = this.maxDate.toISOString().slice(0, 10);
         //  console.log(this.navParams.get('pickUpDate'));
          console.log(this.minDate.toISOString());
-         this.minDate = this.minDate.toISOString().slice(0, 10);
+         this.minDate = this.minDate.toISOString()
          this.today = this.minDate;
          
         //  console.log(this.minDate); 
@@ -131,22 +131,29 @@ export class DropOffDetails{
             console.log("Next clicked!");
             let when, newDate; 
             if(!(this.dropOffTime == undefined)){ 
-                let today = new Date(this.today.slice(0,10));
-                this.dropOffTime =  this.dropOffTime.slice(0,2);
+                let today = new Date(this.today);
+                console.log(today, this.today);
                 newDate = this.selectedDate.day.getFullYear() + ' ' +                                   
                                  Number(this.selectedDate.day.getMonth() + 1 )+ ' ' + 
                                  this.selectedDate.day.getDate() + ' ' +
                                  this.selectedDate.hour + ':' +
                                  this.selectedDate.minute + ' ' +
                                  this.selectedDate.amPm; 
-                when = new Date(today.getFullYear(), today.getMonth(), today.getDate(), Number(this.dropOffTime)); 
+                when = new Date(today.getFullYear(), 
+                    today.getMonth(), 
+                    today.getDate(), 
+                    Number(this.dropOffTime.slice(0,2)), 
+                    Number(this.dropOffTime.slice(3, this.dropOffTime.length -1))
+                ); 
+                // when = new Date(today.getFullYear(), today.getMonth(), today.getDate(), Number(this.dropOffTime)); 
                 console.log('when: ', when); 
                 console.log('location: ', this.loc); 
                 // console.log(this.pickupInstructions); 
                 if(!!textareaValue){ 
                     this.patchDropOffDetails(when, textareaValue); 
                     this.navCtrl.push(OrderSummaryPage, { 
-                        preGenData: this.preGenData
+                        preGenData: this.preGenData,
+                        dropOffDate: when
                     }); 
                 }else{ 
                     this.alertCntrl.openAlertDialog("What's missing?", "Enter dropoff details."); 
@@ -162,7 +169,7 @@ export class DropOffDetails{
             pickUpDate: this.navParams.get('pickUpDate'),
             dropOffDate: whenDate
         }));
-        // console.log((this.loc as any).geometry.location.lat);
+        console.log(localStorage.getItem('dates'));
         if(this.loc['gemetry']){
             this.lat = this.loc['gemetry']['location']['lat'];
             this.lng = this.loc['gemetry']['location']['lng'];

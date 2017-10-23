@@ -95,6 +95,7 @@ export class OrderSummaryPage {
     this.pickUpTime = pickupTime.toISOString().slice(0, 10) + ' ' + (this.timeTo12HrFormat(pickupTime.toTimeString()));
     console.log(this.pickUpTime);
     let time = new Date(JSON.parse(localStorage.getItem('dates'))['dropOffDate']);
+    console.log(time);
     this.eta = time.toISOString().slice(0, 10) + ' ' + this.timeTo12HrFormat(time.toTimeString());
 
   }
